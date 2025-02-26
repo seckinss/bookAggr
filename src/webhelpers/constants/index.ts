@@ -1,0 +1,10 @@
+export const BINANCE_WS_URL = 'wss://stream.binance.com:9443/ws';
+export const BYBIT_WS_URL = 'wss://stream.bybit.com/v5/public/spot';
+export const OKX_WS_URL = 'wss://ws.okx.com:8443/ws/v5/public';
+export const BACKPACK_WS_URL = 'wss://ws.backpack.exchange';
+export const BACKPACK_API_URL = 'https://api.backpack.exchange/api/v1';
+export const KUCOIN_WS_URL = 'wss://ws-api-spot.kucoin.com';
+export const KUCOIN_API_URL = 'https://api.kucoin.com/api/v1';
+export const ORDER_ENDPOINT = 'https://api.backpack.exchange/api/v1/order';
+export const BALANCE_ENDPOINT = 'https://api.backpack.exchange/api/v1/capital';
+export const tickers = ['BTC','ETH','SOL','XRP',"PEPE","DOGE","TNSR" ]
