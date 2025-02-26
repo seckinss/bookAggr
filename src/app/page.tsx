@@ -241,99 +241,139 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       {/* Header */}
-      <header className="border-b border-gray-800 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Crypto Order Book Aggregator</h1>
+      <header className="border-b border-gray-800/50 p-4 backdrop-blur-sm bg-black/30 sticky top-0 z-10">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mr-3">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+            </div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Crypto Order Book Aggregator</h1>
+          </div>
           <div className="flex items-center space-x-4">
             {/* Ticker selector */}
-            <select
-              className="bg-gray-800 border border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={selectedTicker}
-              onChange={(e) => setSelectedTicker(e.target.value)}
-              disabled={isLoading}
-            >
-              {tickers.map((ticker) => (
-                <option key={ticker} value={ticker}>
-                  {ticker}/USDT
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                className="appearance-none bg-gray-800/70 border border-gray-700/50 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
+                value={selectedTicker}
+                onChange={(e) => setSelectedTicker(e.target.value)}
+                disabled={isLoading}
+              >
+                {tickers.map((ticker) => (
+                  <option key={ticker} value={ticker}>
+                    {ticker}/USDT
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                </svg>
+              </div>
+            </div>
             
             {/* Orderbook depth selector */}
             <div className="flex items-center">
               <label htmlFor="depth-selector" className="text-gray-400 mr-2 whitespace-nowrap">
                 Depth:
               </label>
-              <select
-                id="depth-selector"
-                className="bg-gray-800 border border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                value={orderbookDepth}
-                onChange={(e) => setOrderbookDepth(Number(e.target.value))}
-                disabled={isLoading}
-              >
-                <option value={5}>5 levels</option>
-                <option value={10}>10 levels</option>
-                <option value={15}>15 levels</option>
-                <option value={25}>25 levels</option>
-                <option value={50}>50 levels</option>
-              </select>
+              <div className="relative">
+                <select
+                  id="depth-selector"
+                  className="appearance-none bg-gray-800/70 border border-gray-700/50 rounded-lg px-4 py-2 pr-8 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
+                  value={orderbookDepth}
+                  onChange={(e) => setOrderbookDepth(Number(e.target.value))}
+                  disabled={isLoading}
+                >
+                  <option value={5}>5 levels</option>
+                  <option value={10}>10 levels</option>
+                  <option value={15}>15 levels</option>
+                  <option value={25}>25 levels</option>
+                  <option value={50}>50 levels</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="container mx-auto p-4">
+      <main className="container mx-auto p-4 pt-6">
         {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <div className="flex flex-col justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+            <p className="text-gray-400">Connecting to exchanges...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             {/* Current price and spread */}
-            <div className="lg:col-span-3 bg-gray-800 rounded-lg p-6 shadow-lg">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-400">Current Price</h2>
-                  <p className="text-4xl font-bold text-green-400">
-                    ${currentPrice ? formatPrice(currentPrice) : "Loading..."}
-                  </p>
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-gray-700/30">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold text-gray-400 mb-1">Current Price</h2>
+                  <div className="flex items-baseline">
+                    <p className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
+                      ${currentPrice ? formatPrice(currentPrice) : "Loading..."}
+                    </p>
+                    <span className="ml-2 text-sm text-gray-400">USDT</span>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-400">Spread</h2>
-                  <p className="text-2xl font-bold">
-                    {spread ? formatPrice(spread) : "Loading..."} 
+                <div className="h-12 w-px bg-gray-700/50 hidden md:block"></div>
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold text-gray-400 mb-1">Spread</h2>
+                  <div className="flex items-baseline">
+                    <p className="text-2xl md:text-3xl font-bold text-blue-400">
+                      {spread ? formatPrice(spread) : "Loading..."}
+                    </p>
                     <span className="text-sm text-gray-400 ml-2">
                       ({spreadPercentage ? spreadPercentage.toFixed(4) : "0"}%)
                     </span>
-                  </p>
+                  </div>
+                </div>
+                <div className="h-12 w-px bg-gray-700/50 hidden md:block"></div>
+                <div className="flex-1">
+                  <h2 className="text-lg font-semibold text-gray-400 mb-1">Exchange Status</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(exchanges).map(([name, exchange]) => (
+                      <div key={name} className="flex items-center">
+                        <div className={`w-2 h-2 rounded-full mr-1 ${exchange ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                        <span className="text-sm capitalize">{name}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Order book */}
-            <div className="lg:col-span-3 bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-              <div className="p-4 border-b border-gray-700">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden border border-gray-700/30">
+              <div className="p-4 border-b border-gray-700/50">
                 <h2 className="text-xl font-bold">Aggregated Order Book</h2>
                 <p className="text-sm text-gray-400">
                   Combined data from Binance, Bybit, Kucoin, OKX, and Backpack • Showing {orderbookDepth} levels
                 </p>
               </div>
               
-              <div className="grid grid-cols-2 divide-x divide-gray-700">
+              <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-700/50">
                 {/* Bids */}
                 <div className="p-4">
-                  <div className="flex justify-between text-sm text-gray-400 mb-2">
+                  <div className="flex justify-between text-sm text-gray-400 mb-2 pb-2 border-b border-gray-700/30">
                     <span>Price (USDT)</span>
                     <span>Size ({selectedTicker})</span>
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-1 max-h-[500px] overflow-y-auto custom-scrollbar">
                     {aggregatedOrderBook.bids.map((bid, index) => (
                       <div 
                         key={`bid-${index}`} 
-                        className="flex justify-between items-center py-1 border-b border-gray-700/30 relative group"
+                        className="flex justify-between items-center py-1.5 border-b border-gray-700/20 relative group hover:bg-green-500/5 transition-colors duration-150"
                         onMouseEnter={(e) => {
                           // Remove any existing tooltips first
                           removeAllTooltips();
@@ -344,19 +384,19 @@ export default function Home() {
                           
                           // Create and show tooltip with source information
                           const tooltip = document.createElement('div');
-                          tooltip.className = 'absolute bg-gray-900 border border-gray-700 rounded p-2 shadow-lg z-10 left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-48';
+                          tooltip.className = 'absolute bg-gray-900/95 backdrop-blur-sm border border-gray-700 rounded-lg p-3 shadow-xl z-10 left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-56';
                           tooltip.id = tooltipId;
                           
                           // Get sources for this price
                           const sources = getSourcesForPrice(bid.price, true);
                           
                           // Create tooltip content
-                          let content = '<p class="text-xs font-medium mb-1">Order Sources:</p>';
+                          let content = '<p class="text-xs font-medium mb-2 text-gray-300">Order Sources:</p>';
                           Object.entries(sources).forEach(([source, size]) => {
                             const percentage = ((size / bid.size) * 100).toFixed(1);
-                            content += `<div class="flex justify-between text-xs">
-                              <span class="capitalize">${source}:</span>
-                              <span>${size.toFixed(4)} (${percentage}%)</span>
+                            content += `<div class="flex justify-between text-xs mb-1">
+                              <span class="capitalize text-gray-400">${source}:</span>
+                              <span class="font-medium">${size.toFixed(4)} <span class="text-gray-500">(${percentage}%)</span></span>
                             </div>`;
                           });
                           
@@ -389,15 +429,15 @@ export default function Home() {
                 
                 {/* Asks */}
                 <div className="p-4">
-                  <div className="flex justify-between text-sm text-gray-400 mb-2">
+                  <div className="flex justify-between text-sm text-gray-400 mb-2 pb-2 border-b border-gray-700/30">
                     <span>Price (USDT)</span>
                     <span>Size ({selectedTicker})</span>
                   </div>
-                  <div className="space-y-1">
+                  <div className="space-y-1 max-h-[500px] overflow-y-auto custom-scrollbar">
                     {aggregatedOrderBook.asks.map((ask, index) => (
                       <div 
                         key={`ask-${index}`} 
-                        className="flex justify-between items-center py-1 border-b border-gray-700/30 relative group"
+                        className="flex justify-between items-center py-1.5 border-b border-gray-700/20 relative group hover:bg-red-500/5 transition-colors duration-150"
                         onMouseEnter={(e) => {
                           // Remove any existing tooltips first
                           removeAllTooltips();
@@ -408,19 +448,19 @@ export default function Home() {
                           
                           // Create and show tooltip with source information
                           const tooltip = document.createElement('div');
-                          tooltip.className = 'absolute bg-gray-900 border border-gray-700 rounded p-2 shadow-lg z-10 left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-48';
+                          tooltip.className = 'absolute bg-gray-900/95 backdrop-blur-sm border border-gray-700 rounded-lg p-3 shadow-xl z-10 left-1/2 transform -translate-x-1/2 bottom-full mb-2 w-56';
                           tooltip.id = tooltipId;
                           
                           // Get sources for this price
                           const sources = getSourcesForPrice(ask.price, false);
                           
                           // Create tooltip content
-                          let content = '<p class="text-xs font-medium mb-1">Order Sources:</p>';
+                          let content = '<p class="text-xs font-medium mb-2 text-gray-300">Order Sources:</p>';
                           Object.entries(sources).forEach(([source, size]) => {
                             const percentage = ((size / ask.size) * 100).toFixed(1);
-                            content += `<div class="flex justify-between text-xs">
-                              <span class="capitalize">${source}:</span>
-                              <span>${size.toFixed(4)} (${percentage}%)</span>
+                            content += `<div class="flex justify-between text-xs mb-1">
+                              <span class="capitalize text-gray-400">${source}:</span>
+                              <span class="font-medium">${size.toFixed(4)} <span class="text-gray-500">(${percentage}%)</span></span>
                             </div>`;
                           });
                           
@@ -457,10 +497,27 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 p-4 mt-8">
-        <div className="container mx-auto text-center text-gray-400 text-sm">
-          <p>Data is aggregated from multiple exchanges and updated every second.</p>
-          <p className="mt-2">© {new Date().getFullYear()} Crypto Order Book Aggregator</p>
+      <footer className="border-t border-gray-800/50 p-6 mt-8 bg-black/30 backdrop-blur-sm">
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-4 md:mb-0">
+              <div className="flex items-center">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mr-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                </div>
+                <span className="text-lg font-semibold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Crypto Order Book Aggregator</span>
+              </div>
+              <p className="text-sm text-gray-500 mt-2">
+                For educational purposes only. Not financial advice.
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className="text-sm text-gray-400">Data is aggregated from multiple exchanges and updated in real-time.</p>
+              <p className="text-xs text-gray-500 mt-2">© {new Date().getFullYear()} Crypto Order Book Aggregator</p>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
