@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Binance } from "../webhelpers/helpers/Binance";
 import { Bybit } from "../webhelpers/helpers/Bybit";
 import { OKX } from "../webhelpers/helpers/OKX";
 import { tickers } from "../webhelpers/constants";
 import { Order } from "../webhelpers/types";
 import { Kucoin } from "../webhelpers/helpers/Kucoin";
-// Component to display aggregated order book
+import { Kraken } from "../webhelpers/helpers/Kraken";
 import { Backpack } from "../webhelpers/helpers/Backpack";
+
 export default function Home() {
   const [selectedTicker, setSelectedTicker] = useState("BTC");
   const [orderbookDepth, setOrderbookDepth] = useState(15); // Default depth
@@ -21,12 +22,14 @@ export default function Home() {
     bybit: Bybit | null;
     okx: OKX | null;
     kucoin: Kucoin | null;
+    kraken: Kraken | null;
     backpack: Backpack | null;
   }>({
     binance: null,
     bybit: null,
     okx: null,
     kucoin: null,
+    kraken: null,
     backpack: null,
   });
   const [isLoading, setIsLoading] = useState(true);
@@ -42,13 +45,14 @@ export default function Home() {
         setIsLoading(true);
         
         // If exchanges already exist, update their tickers instead of creating new instances
-        if (activeExchanges.binance && exchanges.bybit && exchanges.okx && exchanges.kucoin && exchanges.backpack) {
+        if (activeExchanges.binance || activeExchanges.bybit || activeExchanges.okx || activeExchanges.kucoin || activeExchanges.backpack || activeExchanges.kraken) {
           await Promise.all([
-            activeExchanges.binance.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
-            exchanges.bybit.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
-            exchanges.okx.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
-            exchanges.kucoin.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
-            exchanges.backpack.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
+            activeExchanges.binance && activeExchanges.binance.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
+            activeExchanges.bybit && activeExchanges.bybit.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
+            activeExchanges.okx && activeExchanges.okx.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
+            activeExchanges.kucoin && activeExchanges.kucoin.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
+            activeExchanges.backpack && activeExchanges.backpack.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
+            activeExchanges.kraken && activeExchanges.kraken.changeTickers([{ ticker: selectedTicker, trackOrderBook: true }]),
           ]);
         } else {
           // First time initialization
@@ -57,7 +61,7 @@ export default function Home() {
           const okx = new OKX([{ ticker: selectedTicker, trackOrderBook: true }]);
           const kucoin = new Kucoin([{ ticker: selectedTicker, trackOrderBook: true }]);
           const backpack = new Backpack([{ ticker: selectedTicker, trackOrderBook: true }]);
-          
+          const kraken = new Kraken([{ ticker: selectedTicker, trackOrderBook: true }]);
           // Start connections
           await Promise.all([
             binance.start(),
@@ -65,15 +69,17 @@ export default function Home() {
             okx.start(),
             kucoin.start(),
             backpack.start(),
+            kraken.start(),
           ]);
 
           // Update state with exchange instances
           activeExchanges = {
-            binance,
-            bybit,
-            okx,
-            kucoin,
-            backpack,
+            binance: binance,
+            bybit: bybit,
+            okx: okx,
+            kucoin: kucoin,
+            backpack: backpack,
+            kraken: kraken,
           };
           setExchanges(activeExchanges);
         }

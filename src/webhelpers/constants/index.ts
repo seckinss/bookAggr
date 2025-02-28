@@ -5,6 +5,7 @@ export const BACKPACK_WS_URL = 'wss://ws.backpack.exchange';
 export const BACKPACK_API_URL = 'https://api.backpack.exchange/api/v1';
 export const KUCOIN_WS_URL = 'wss://ws-api-spot.kucoin.com';
 export const KUCOIN_API_URL = 'https://api.kucoin.com/api/v1';
+export const KRAKEN_WS_URL = 'wss://ws.kraken.com/v2';
 export const ORDER_ENDPOINT = 'https://api.backpack.exchange/api/v1/order';
 export const BALANCE_ENDPOINT = 'https://api.backpack.exchange/api/v1/capital';
 export const tickers = ['BTC','ETH','SOL','XRP',"PEPE","DOGE","TNSR" ]

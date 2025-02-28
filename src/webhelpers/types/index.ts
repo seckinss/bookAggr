@@ -33,3 +33,33 @@ export type OkxMarkPrice = {
       }
     ]
   }
+
+
+export type KrakenBookSnapshot = {
+  channel: string;
+  type: string;
+  data: [{
+      asks: { price: number; qty: number }[];
+      bids: { price: number; qty: number }[];
+      checksum: number;
+      symbol: string;
+  }];
+}
+
+export type KrakenBookUpdate = {
+  channel: string;
+  type: string;
+  data: [{
+      asks: { price: number; qty: number }[];
+      bids: { price: number; qty: number }[];
+      checksum: number;
+      symbol: string;
+      timestamp: string;
+  }];
+}
+
+export type KrakenTickerConfig = {
+  ticker: string;
+  trackPrice?: boolean;
+  trackOrderBook?: boolean;
+}
